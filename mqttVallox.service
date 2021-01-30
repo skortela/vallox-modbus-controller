@@ -1,0 +1,16 @@
+[Unit]
+Description=mqttVallox
+After=network.target
+
+[Service]
+Type=forking
+PIDFile=/var/run/mqttVallox.pid
+ExecStart=/usr/bin/mqttVallox \
+	--conf_file /etc/mqttVallox/mqttVallox.conf \
+	--log_file /var/log/mqttVallox.log \
+	--pid_file /var/run/mqttVallox.pid \
+	--daemon
+ExecReload=/bin/kill -HUP $MAINPID
+
+[Install]
+WantedBy=multi-user.target
