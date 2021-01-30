@@ -4,7 +4,7 @@ Vallox air ventilation contoller via modbus and MQTT.
 
 ## Requirements
 
-To build mqttAgent you have to have following tools
+To build you have to have following tools
 
 * CMake
 * GCC/CLang
