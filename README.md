@@ -36,3 +36,21 @@ To build you have to type following commands:
     cmake -DCMAKE_INSTALL_PREFIX=/usr ../
     make
     sudo make install
+
+## Usage
+
+You can test running mqttVallox from command line:
+
+    ./bin/mqttVallox
+
+When you use Linux distribution using systemd, then you can try start mqttVallox-daemon using
+
+    systemctl start mqttVallox
+    systemctl status mqttVallox
+    systemctl reload mqttVallox
+    systemctl stop mqttVallox
+
+to autostart
+
+    systemctl enable mqttVallox
+    systemctl disable mqttVallox
