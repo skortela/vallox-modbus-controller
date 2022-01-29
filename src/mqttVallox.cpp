@@ -683,6 +683,7 @@ void run()
 
     MQTTClient client;
     MQTTClient_connectOptions conn_opts = MQTTClient_connectOptions_initializer;
+    MQTTClient_willOptions wopts = MQTTClient_willOptions_initializer;
     int rc;
 
     MQTTClient_create(&client, config.mqttHost, config.clientId,
@@ -692,6 +693,12 @@ void run()
     conn_opts.cleansession = 1;
     conn_opts.username = config.mqttUsername;
     conn_opts.password = config.mqttPassword;
+
+    conn_opts.will = &wopts;
+    conn_opts.will->message = KOffline;
+    conn_opts.will->qos = 1;
+    conn_opts.will->retained = 0;
+    conn_opts.will->topicName = KMqttAvailability;
 
     MQTTClient_setCallbacks(client, NULL, connlost, msgarrvd, delivered);
 
@@ -716,7 +723,7 @@ void run()
 
     //m_vallox.dotests();
     //running = false;
-
+    CElapseTimer onlineTimer;
     while(running)
     {
         if (!MQTTClient_isConnected(client)) {
@@ -731,11 +738,20 @@ void run()
                 MQTTClient_subscribe(client, config.topic, QOS);
                 wasConnected = 1;
                 connectionErrPrinted = 0;
+                
+                onlineTimer.start();
+                MQTTClient_publish(client, KMqttAvailability, strlen(KOnline), (void*)KOnline, 1, 1, NULL);
             }
             else if (!connectionErrPrinted) {
                 DBG("MQTTClient_connect: Failed to connect");
                 connectionErrPrinted = 1;
                 sleep(10);
+            }
+        }
+        else {
+            if (onlineTimer.elapsed() > KAvailabilityInterval) {
+                onlineTimer.start();
+                MQTTClient_publish(client, KMqttAvailability, strlen(KOnline), (void*)KOnline, 1, 1, NULL);
             }
         }
 
@@ -761,7 +777,11 @@ void run()
 
     m_vallox.setMQTTClient(NULL);
     m_vallox.closev();
+
+    if (MQTTClient_isConnected(client)) {
+        MQTTClient_publish(client, KMqttAvailability, strlen(KOffline), (void*)KOffline, 1, 1, NULL);
     MQTTClient_disconnect(client, 10000);
+    }
     MQTTClient_destroy(&client);
     DBG("MQTTClient terminated");
 }

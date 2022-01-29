@@ -1,4 +1,7 @@
 
+#ifndef _VALLOX_H_
+#define _VALLOX_H_
+
 #include <map>
 #include <sys/types.h>
 #include <MQTTClient.h>
@@ -95,3 +98,5 @@ private:
     std::map<uint8_t, long int> m_lastPublishTime;
 
 };
+
+#endif // _VALLOX_H_

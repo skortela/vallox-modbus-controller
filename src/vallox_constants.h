@@ -7,6 +7,13 @@
 
 #include <map>
 
+const char* const KMqttPrefix = "vallox/";
+const char* const KMqttAvailability = "vallox/availability";
+const char* const KOnline = "online";
+const char* const KOffline = "offline";
+const unsigned long int KAvailabilityInterval = 300000; // interval in ms.
+
+
 const uint8_t VX_ALL_CLIENTS = 0x20;
 
 const uint8_t VX_DOMAIN = 0x01;

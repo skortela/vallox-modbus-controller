@@ -16,10 +16,6 @@
 
 const uint8_t client_id = 0x22; // select id from 0x21 to 0x2F, 0x21 is usually reserved for first controller
 
-const char* KMqttPrefix = "myhome/vallox/";
-
-
-
 long int millis()
 {
     struct timespec ts;
