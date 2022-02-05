@@ -740,7 +740,7 @@ void run()
                 connectionErrPrinted = 0;
                 
                 onlineTimer.start();
-                MQTTClient_publish(client, KMqttAvailability, strlen(KOnline), (void*)KOnline, 1, 1, NULL);
+                MQTTClient_publish(client, KMqttAvailability, strlen(KOnline), (void*)KOnline, 1, 0, NULL);
             }
             else if (!connectionErrPrinted) {
                 DBG("MQTTClient_connect: Failed to connect");
@@ -751,7 +751,7 @@ void run()
         else {
             if (onlineTimer.elapsed() > KAvailabilityInterval) {
                 onlineTimer.start();
-                MQTTClient_publish(client, KMqttAvailability, strlen(KOnline), (void*)KOnline, 1, 1, NULL);
+                MQTTClient_publish(client, KMqttAvailability, strlen(KOnline), (void*)KOnline, 1, 0, NULL);
             }
         }
 
@@ -779,8 +779,8 @@ void run()
     m_vallox.closev();
 
     if (MQTTClient_isConnected(client)) {
-        MQTTClient_publish(client, KMqttAvailability, strlen(KOffline), (void*)KOffline, 1, 1, NULL);
-    MQTTClient_disconnect(client, 10000);
+        MQTTClient_publish(client, KMqttAvailability, strlen(KOffline), (void*)KOffline, 1, 0, NULL);
+        MQTTClient_disconnect(client, 10000);
     }
     MQTTClient_destroy(&client);
     DBG("MQTTClient terminated");

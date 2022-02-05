@@ -676,7 +676,7 @@ int CVallox::send_mqtt(const char* topic, const char* text)
     DBG("send_mqtt: topic: %s, value: %s", topic, text);
 
     // MQTTClient handle, const char *topicName, int payloadlen, const void *payload, int qos, int retained, MQTTClient_deliveryToken *dt
-    int rc = MQTTClient_publish(m_mqttClient, topic, strlen(text), (void*)text, 1, 1, NULL);
+    int rc = MQTTClient_publish(m_mqttClient, topic, strlen(text), (void*)text, 1, 0, NULL);
     if (rc != MQTTCLIENT_SUCCESS)
     {
         DBG("Failed to publish! topic: %s, value: %s", topic, text);
