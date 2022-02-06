@@ -3,7 +3,9 @@
 #include <stdlib.h>
 #include <stdarg.h>
 #include <string.h>
+#include <sys/time.h>
 #include <time.h>
+#include <math.h>
 
 #include "debug.h"
 
@@ -24,21 +26,30 @@ void DBG(const char *str,...)
     else
         stream = stdout;
 
-    char buff[30];
-    struct tm my_time;
-    time_t now;
-    now = time(NULL);
-    my_time = *(localtime(&now));
-    size_t len = strftime(buff, sizeof(buff),"%d-%m-%Y %H:%M:%S ", &my_time);
+    char buffer[25];
+    int millisec;
+    struct tm* tm_info;
+    struct timeval tv;
 
-    len = fwrite(buff, len, 1, stream);
+    gettimeofday(&tv, NULL);
+
+    millisec = lrint(tv.tv_usec/1000.0); // Round to nearest millisec
+    if (millisec >= 1000) { // Allow for rounding up to nearest second
+        millisec -= 1000;
+        tv.tv_sec++;
+    }
+
+    tm_info = localtime(&tv.tv_sec);
+    size_t len = strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S.", tm_info);
+    sprintf(buffer + len, "%03d ", millisec);
+
+    len = fwrite(buffer, 1, strlen(buffer), stream);
     if (len > 0) {
-        //fprintf(stream,"%d : ",time(NULL));
         va_list arglist;
-        va_start(arglist,str);
-        vfprintf(stream,str,arglist);
+        va_start(arglist, str);
+        vfprintf(stream, str, arglist);
         va_end(arglist);
-        fprintf(stream," \n");
+        fprintf(stream, "\n");
 
         fflush(stream);
     }
