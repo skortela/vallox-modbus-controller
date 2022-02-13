@@ -1,6 +1,7 @@
 /*
 
 */
+#include <stdlib.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <string.h>
@@ -8,6 +9,7 @@
 #include <unistd.h>
 //#include <chrono>
 #include <sys/time.h>
+#include <pthread.h>
 
 #include "vallox.h"
 #include "debug.h"
@@ -206,11 +208,8 @@ char* getTopicForParamBit(uint8_t param, uint8_t bitIndex)
                     free(topic);
             }
         }
-        else
-            return NULL;
     }
-    else
-        return NULL;
+    return NULL;
 }
 
 bool is_param_known_bitfield(uint8_t param)
@@ -633,7 +632,7 @@ void CVallox::onParamReceived(uint8_t param, uint8_t value)
     free(topic);
 }
 
-int CVallox::handle_value_bits_data(uint8_t param, uint8_t data)
+void CVallox::handle_value_bits_data(uint8_t param, uint8_t data)
 {
     for (int i=0; i<8; i++)
     {

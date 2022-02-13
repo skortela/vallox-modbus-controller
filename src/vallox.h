@@ -4,7 +4,9 @@
 
 #include <map>
 #include <sys/types.h>
+#include <stdint.h>
 #include <MQTTClient.h>
+#include <time.h>
 
 #include "vallox_constants.h"
 
@@ -71,7 +73,7 @@ private:
     int queryParam(uint8_t param, uint8_t& value);
     int sendRequest(uint8_t param, uint8_t data);
 
-    int handle_value_bits_data(uint8_t param, uint8_t data);
+    void handle_value_bits_data(uint8_t param, uint8_t data);
     bool has_param_bit_changed(uint8_t param, uint8_t data, uint8_t bitIndex);
     bool hasRecentData(uint8_t param);
     int send_mqtt(const char* topic, const char* text);
